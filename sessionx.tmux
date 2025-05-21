@@ -47,6 +47,7 @@ handle_binds() {
 	bind_back=$(tmux_option_or_fallback "@sessionx-bind-back" "ctrl-b")
 	bind_new_window=$(tmux_option_or_fallback "@sessionx-bind-new-window" "ctrl-e")
 	bind_zo=$(tmux_option_or_fallback "@sessionx-bind-zo-new-window" "ctrl-f")
+	bind_history=$(tmux_option_or_fallback "@sessionx-bind-zo-new-window" "ctrl-f")
 	bind_kill_session=$(tmux_option_or_fallback "@sessionx-bind-kill-session" "alt-bspace")
 
 	bind_exit=$(tmux_option_or_fallback "@sessionx-bind-abort" "esc")
@@ -76,6 +77,7 @@ handle_args() {
 
 	NEW_WINDOW="$bind_new_window:reload(find $PWD -mindepth 1 -maxdepth 1 -type d -o -type l)+change-preview($LS_COMMAND {})"
 	ZO_WINDOW="$bind_zo:reload(zoxide query -l)+change-preview($LS_COMMAND {})"
+	HISTORY_WINDOW="$bind_zo:reload(zoxide query -l)+change-preview($LS_COMMAND {})"
 	KILL_SESSION="$bind_kill_session:execute-silent(tmux kill-session -t {})+reload(${SCRIPTS_DIR%/}/reload_sessions.sh)"
 
 	ACCEPT="$bind_accept:replace-query+print-query"
@@ -91,7 +93,7 @@ handle_args() {
 	RENAME_SESSION_RELOAD='bash -c '\'' tmux list-sessions | sed -E "s/:.*$//"; '\'''
 	RENAME_SESSION="$bind_rename_session:execute($RENAME_SESSION_EXEC)+reload($RENAME_SESSION_RELOAD)"
 
-	HEADER="$bind_accept=󰿄  $bind_kill_session=󱂧  $bind_rename_session=󰑕  $bind_configuration_mode=󱃖  $bind_window_mode=   $bind_new_window=󰇘  $bind_back=󰌍  $bind_tree_mode=󰐆   $bind_scroll_up=  $bind_scroll_down= / $bind_zo="
+	HEADER="$bind_accept=󰿄  $bind_kill_session=󱂧  $bind_rename_session=󰑕  $bind_configuration_mode=󱃖  $bind_window_mode=   $bind_new_window=󰇘  $bind_back=󰌍  $bind_tree_mode=󰐆   $bind_scroll_up=  $bind_scroll_down= / $bind_zo= / $bind_history="
 	if is_fzf-marks_enabled; then
 		HEADER="$HEADER  $(get_fzf-marks_keybind)=󰣉"
 	fi
@@ -108,6 +110,7 @@ handle_args() {
 		--bind "$WINDOWS_MODE"
 		--bind "$NEW_WINDOW"
 		--bind "$ZO_WINDOW"
+		--bind "$HISTORY_WINDOW"
 		--bind "$KILL_SESSION"
 		--bind "$DELETE"
 		--bind "$EXIT"
