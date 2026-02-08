@@ -124,6 +124,7 @@ handle_output() {
 			last_name="$(basename "$target" | tr -d '.')"
 			second_name=$(get_second_last_name "$target")
 			session_name="${second_name}/${last_name}"
+			zoxide add "$target"
 			tmux new-session -ds "$session_name" -c "$target"
 			target="$session_name"
 		else
