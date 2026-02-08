@@ -96,9 +96,11 @@ handle_output() {
 			tmux new-session -ds "$mark" -c "$target"
 			target="$mark"
 		elif test -d "$target"; then
-			tmux new-session -ds $target -c "$target"
-			zoxide add "$target"
-			# target=$d_target
+			last_name="$(basename "$target" | tr -d '.')"
+			second_name=$(get_second_last_name "$target")
+			session_name="${second_name}/${last_name}"
+			tmux new-session -ds "$session_name" -c "$target"
+			target="$session_name"
 		else
 			if [[ "$Z_MODE" == "on" ]]; then
 				z_target=$(zoxide query "$target")
