@@ -41,6 +41,31 @@ input() {
 	fi
 }
 
+get_second_last_name() {
+    local path="$1"
+
+    # Ensure the path is not empty or null
+    if [[ -z "$path" ]]; then
+        echo ""
+        return
+    fi
+
+    # Remove trailing slashes
+    path="${path%/}"
+
+    # Split path into an array using '/' as the delimiter
+    IFS='/' read -r -a parts <<< "$path"
+
+    # Check if there are at least 2 parts
+    if (( ${#parts[@]} >= 2 )); then
+        # Get the second-to-last part and replace dots with underscores
+        local second_last="${parts[-2]//./_}"
+        echo "$second_last"
+    else
+        echo ""
+    fi
+}
+
 additional_input() {
 	sessions=$(get_sorted_sessions)
 	custom_paths=${extra_options["custom-paths"]}
